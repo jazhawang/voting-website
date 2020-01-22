@@ -17,12 +17,12 @@ import GHC.Generics
 type RootEndpoint = Get '[JSON] String
 type API = RootEndpoint
       :<|> "users" :> Get '[JSON] [User]
-      :<|> "message" :> Get '[JSON] [String]
+      :<|> "message" :> Get '[JSON] String
 
 appServer :: Server API
-appServer = (liftIO (putStrLn "Accesing Root Endpoint") >> return "Wow")
+appServer = (logServer "Accesing Root Endpoint" >> return "Hello, World!")
        :<|> return users
-       :<|> return ["Wow"]
+       :<|> (logServer "🚀  Launch the missles!!!" >> return "Missiles emminent 🚀🚀")
 
 appAPI :: Proxy API
 appAPI = Proxy
@@ -30,6 +30,10 @@ appAPI = Proxy
 app :: Application
 app = serve appAPI appServer
 
+
+-- simple logging helper function
+logServer :: String -> Handler ()
+logServer = liftIO . putStrLn 
 
 -- User datatype and instances, remove later --
 data User = User
