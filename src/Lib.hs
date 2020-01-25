@@ -15,9 +15,14 @@ import Data.Time.Calendar
 import GHC.Generics
 
 type RootEndpoint = Get '[JSON] String
-type API = RootEndpoint
-      :<|> "users" :> Get '[JSON] [User]
-      :<|> "message" :> Get '[JSON] String
+
+type APIEndpoints = "api" :> "v1" :> (
+  "users" :> Get '[JSON] [User] 
+  :<|> "message" :> Get '[JSON] String 
+  )
+
+type API = RootEndpoint :<|> APIEndpoints
+
 
 appServer :: Server API
 appServer = (logServer "Accesing Root Endpoint" >> return "Hello, World!")
