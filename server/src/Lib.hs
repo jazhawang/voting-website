@@ -49,6 +49,7 @@ data User = User
   } deriving (Eq, Show, Generic)
 instance ToJSON User
 
+
 users :: [User]
 users =
   [ User "Isaac Newton"    372 "isaac@newton.co.uk" (fromGregorian 1683  3 1)
