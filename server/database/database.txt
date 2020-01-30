@@ -1,0 +1,26 @@
+voting website - database schema V1
+
+~<...> means key value
+<...>? means optional value
+
+
+Vote
+(~voterID, ~choiceID, numberOfVotes, dateVoted, comment?)
+
+Topic
+(~topicID, name, description, startTime, endTime, startCondition?, endCondition?) // set last two to null at first
+
+Choice
+(~name, ~topicID, description?, proposedBy?, dateProposed?)
+
+UserVotes
+(~voterID, ~topicID, allocatedVotes)
+
+User
+(~userID, username, dateJoined, email?)
+
+EndCondition 
+(~endConditionID, description?, endCode)
+
+NotifyUser
+(~userID, ~topicID, message?)
