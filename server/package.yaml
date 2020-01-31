@@ -28,6 +28,7 @@ dependencies:
 - warp
 - wai
 - mtl
+- dotenv
 
 library:
   source-dirs: src
