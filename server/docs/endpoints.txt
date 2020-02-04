@@ -2,5 +2,6 @@
 Documentation for API endpoints
 
 
-/api/v1/ --->>>
-    users
+/api/v1/...
+    users : List all users in the database
+    user/{id} : Return user with given id. Return 404 if not found
