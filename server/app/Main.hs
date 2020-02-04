@@ -24,8 +24,8 @@ main = do
 
 config :: Configuration.Dotenv.Config 
 config = Config {
-    configPath = ["../.env"]
-  , configExamplePath = ["../.env.example"]
+    configPath = ["./.env"]
+  , configExamplePath = ["./.env.example"]
   , configOverride = False }
 
 
