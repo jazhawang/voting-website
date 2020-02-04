@@ -1,7 +1,36 @@
 
 Documentation for API endpoints
 
-
+GET:
 /api/v1/...
-    users : List all users in the database
+    users : List all users in the database (could be a lot)
     user/{id} : Return user with given id. Return 404 if not found
+    user/votes : Return all of the votes of a user
+    user/{id}/topic/{topicID}: Return allocated votes and votes for all choices of a given topic
+    
+    topics: Get all topics (could be a lot)
+    topic/{id} : Return a topic given its id. Return 404 if not found
+    topic/{id}/votes: Get all the votes give for this topic
+    topic/{id}/users: Get all the users that have been invited to vote, and with userVotes
+    topic/{id}/choices: Get all the choices for a given vote
+
+POST:
+/api/v1/...
+    user/{id} : create new user
+    topic/{id} : create a new poll, with list of users(emails) to allocate votes for, return the links
+    user/{id}/vote-for/{topicID}/{choiceID}: given body of votes, check if can vote, if yes then allocate votes correctly
+    
+PATCH:
+/api/v1...
+    user/{id} : update a user
+    topic/{id}/update-votes/{userID}/ : given body, update votes accordinly
+    topic/{id}/new-choice/ : given choice body, add it to the topic
+    topic/{id}/update-choice/{choiceID}: given body choice, update it
+    topic/{id}/add-user/{userID}: add user with allocated votes
+
+
+DELETE:
+/api/v1...
+    user/{id}: delete user
+    topic/{id}: delete topic
+    choice/{id}: delete choice
