@@ -2,9 +2,9 @@ name:                voting-website
 version:             0.1.0.0
 github:              "jazhawang/voting-website"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2020 Author name here"
+author:              "Zhao Wang"
+maintainer:          "jazhawang@gmail.com"
+copyright:           "2020 Zhao Wang"
 
 extra-source-files:
 - README.md
@@ -29,6 +29,11 @@ dependencies:
 - wai
 - mtl
 - dotenv
+- postgresql-simple
+- resource-pool
+- users
+- dotenv
+- envy
 
 library:
   source-dirs: src
@@ -53,4 +58,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - voting-website
+    - voting-website    

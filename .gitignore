@@ -3,3 +3,6 @@ voting-website.cabal
 *.hi
 *.o
 *~
+.DS_Store
+.env
+report.html

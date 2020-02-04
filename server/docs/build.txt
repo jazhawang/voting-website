@@ -1,0 +1,11 @@
+make sure you have the necessary packages installed! (look at the package.yaml) 
+for example PostgreSql.
+
+
+building files:
+$ stack build
+
+~~~~~~~~~~~~~~~
+building and running executable
+$ stack run
+
