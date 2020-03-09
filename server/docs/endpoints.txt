@@ -9,8 +9,7 @@ GET:
     user/{id}/topic/{topicID}: Return allocated votes and votes for all choices of a given topic
     
     topics: Get all topics (could be a lot)
-    topic/{id} : Return a topic given its id. Return 404 if not found
-    topic/{id}/votes: Get all the votes give for this topic
+    topic/{id} : Return a topic given its id. Return 404 if not found    
     topic/{id}/users: Get all the users that have been invited to vote, and with userVotes
     topic/{id}/choices: Get all the choices for a given vote
 

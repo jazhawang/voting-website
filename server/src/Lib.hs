@@ -13,7 +13,8 @@ import Data.Aeson
 import Data.Aeson.Types
 import Data.Time.Calendar
 import GHC.Generics
-import Users
+import Voting.Users
+import Voting.Types
 import Database.PostgreSQL.Simple
 import Data.Pool
 import EnvHandler
@@ -46,7 +47,6 @@ apiServer = apiUserServer
 
 appAPI :: Proxy API
 appAPI = Proxy
-
 
 app :: AppEnv -> Application
 app env = serve appAPI $ hoistServer appAPI (envHandlerToHandler env) appServer
