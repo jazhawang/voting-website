@@ -1,20 +1,12 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 
 module Voting.Types (Topic, Vote, UserVote, User, Condition, Choice) where
-import Control.Monad
 import Data.Aeson
-import Data.Aeson.Types
 import Data.Time.Calendar
 import GHC.Generics
 import Database.PostgreSQL.Simple
-import EnvHandler
-import Servant
-import Servant.Server
-import Control.Monad.IO.Class
-import AppEnv
 
 data Topic = Topic
   { id :: Integer

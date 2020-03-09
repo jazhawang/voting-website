@@ -4,21 +4,15 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Lib (app, AppEnv(..), EnvHandler) where
-import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Reader
 import Servant
-import Servant.Server
-import Data.Aeson
-import Data.Aeson.Types
-import Data.Time.Calendar
-import GHC.Generics
 import Voting.Users
 import Voting.Types
-import Database.PostgreSQL.Simple
 import Data.Pool
 import EnvHandler
 import AppEnv
+
 
 type RootEndpoint = Get '[JSON] String
 
