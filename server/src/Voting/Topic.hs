@@ -34,4 +34,13 @@ queryTopicVotes conn id = do
     liftIO (query conn queryString [id])
 
 queryTopicUsers :: Connection -> Integer -> EnvHandler [(User, UserVote)]
-queryTopicUsers conn id = return []
+queryTopicUsers conn id = throwError err404
+
+createTopic :: Connection -> Topic -> [UserVote] -> EnvHandler ()
+createTopic conn topic userVotes = throwError err404
+
+updateTopic :: Connection -> Integer -> Topic -> EnvHandler ()
+updateTopic conn id topic = throwError err404
+
+deleteTopic :: Connection -> Integer -> EnvHandler ()
+deleteTopic conn id = throwError err404

@@ -18,4 +18,3 @@ queryUser conn id = do
     case result of 
         [user] -> return user
         _      -> throwError err404
-
