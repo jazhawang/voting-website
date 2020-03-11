@@ -1,4 +1,4 @@
-voting website - database schema V1
+voting website - database schema V2
 
 ~<...> means key value
 <...>? means optional value
@@ -8,19 +8,13 @@ Vote
 (~voterID, ~choiceID, amount, mostRecent, comment?)
 
 Topic
-(~id, name, description, startTime, endTime, startCondition?, endCondition?) // set last two to null at first
+(~id, name, description, proposedBy ,startTime, endTime)
 
 Choice
-(~name, ~topicID, description?, proposedBy?, dateProposed?)
+(~id, name, topicID, description?, proposedBy, dateProposed)
 
-UserVote
+AllocatedVote
 (~userID, ~topicID, votesAllocated)
 
-User
+Member
 (~id, username, dateJoined, email?)
-
-EndCondition 
-(~endConditionID, description?, endCode)
-
-NotifyUser
-(~userID, ~topicID, message?)

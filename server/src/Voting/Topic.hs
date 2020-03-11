@@ -28,16 +28,15 @@ queryTopicFull conn id = do
 queryTopicVotes :: Connection -> Integer -> EnvHandler [Vote]
 queryTopicVotes conn id = do    
     let queryString = "SELECT Vote.* FROM Vote" 
-                      <> "JOIN Choice ON (Vote.choiceID=Choice.name)"
-                      <> "JOIN Topic ON (Choice.topicID=Topic.id)"
+                      <> "JOIN Choice ON (Vote.choiceID=Choice.id)"
                       <> "WHERE Choice.topicID=?"
     liftIO (query conn queryString [id])
 
-queryTopicUsers :: Connection -> Integer -> EnvHandler [(User, UserVote)]
-queryTopicUsers conn id = throwError err404
+queryTopicMembers :: Connection -> Integer -> EnvHandler [(Member, AllocatedVote)]
+queryTopicMembers conn id = throwError err404
 
-createTopic :: Connection -> Topic -> [UserVote] -> EnvHandler ()
-createTopic conn topic userVotes = throwError err404
+createTopic :: Connection -> Topic -> [AllocatedVote] -> EnvHandler ()
+createTopic conn topic allocatedVotes = throwError err404
 
 updateTopic :: Connection -> Integer -> Topic -> EnvHandler ()
 updateTopic conn id topic = throwError err404

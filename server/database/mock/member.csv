@@ -1,0 +1,10 @@
+id,username, dateJoined,email
+1,billy,2019-01-02 4:05,test@mail.com
+2,bob,2017-01-01 8:12,test+1@mail.com
+3,sarah,1999-04-08 2:00,test+2@mail.com
+4,sam,2000-01-03 5:00,test+3@mail.com
+5,john,2018-01-02 4:10,test@mail.com
+6,bob,2018-01-02 4:10, 
+7,sally,2018-01-04 4:20,test+1@mail.com
+8,justine,2018-01-02 6:00,
+9,bichon,2018-01-02 23:00,wow@mail.com

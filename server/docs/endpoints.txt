@@ -3,33 +3,33 @@ Documentation for API endpoints
 
 GET:
 /api/v1/...
-    users : List all users in the database (could be a lot)
-    user/{id} : Return user with given id. Return 404 if not found
-    user/votes : Return all of the votes of a user
-    user/{id}/topic/{topicID}: Return allocated votes and votes for all choices of a given topic
+    members : List all members in the database (could be a lot)
+    member/{id} : Return member with given id. Return 404 if not found
+    member/votes : Return all of the votes of a member
+    member/{id}/topic/{topicID}: Return allocated votes and votes for all choices of a given topic
     
     topics: Get all topics (could be a lot)
     topic/{id} : Return a topic given its id. Return 404 if not found    
-    topic/{id}/users: Get all the users that have been invited to vote, and with userVotes
+    topic/{id}/members: Get all the members that have been invited to vote, and with AllocatedVotes
     topic/{id}/choices: Get all the choices for a given vote
 
 POST:
 /api/v1/...
-    user/{id} : create new user
-    topic/{id} : create a new poll, with list of users(emails) to allocate votes for, return the links
-    user/{id}/vote-for/{topicID}/{choiceID}: given body of votes, check if can vote, if yes then allocate votes correctly
+    member/{id} : create new member
+    topic/{id} : create a new poll, with list of members(emails) to allocate votes for, return the links
+    member/{id}/vote-for/{topicID}/{choiceID}: given body of votes, check if can vote, if yes then allocate votes correctly
     
 PATCH:
 /api/v1...
-    user/{id} : update a user
-    topic/{id}/update-votes/{userID}/ : given body, update votes accordinly
+    member/{id} : update a member
+    topic/{id}/update-votes/{memberID}/ : given body, update votes accordinly
     topic/{id}/new-choice/ : given choice body, add it to the topic
     topic/{id}/update-choice/{choiceID}: given body choice, update it
-    topic/{id}/add-user/{userID}: add user with allocated votes
+    topic/{id}/add-member/{memberID}: add member with allocated votes
 
 
 DELETE:
 /api/v1...
-    user/{id}: delete user
+    member/{id}: delete member
     topic/{id}: delete topic
     choice/{id}: delete choice

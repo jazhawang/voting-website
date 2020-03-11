@@ -6,3 +6,5 @@ voting-website.cabal
 .DS_Store
 .env
 report.html
+logfile
+db

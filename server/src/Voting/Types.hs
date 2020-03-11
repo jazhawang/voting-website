@@ -2,9 +2,9 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 
-module Voting.Types (Topic, Vote, UserVote, User, Condition, Choice) where
+module Voting.Types (Topic, Vote, AllocatedVote, Member, Condition, Choice) where
 import Data.Aeson
-import Data.Time.Calendar
+import Data.Time
 import GHC.Generics
 import Database.PostgreSQL.Simple
 
@@ -12,8 +12,8 @@ data Topic = Topic
   { id :: Integer
   , name :: String  
   , description :: String
-  , startTime :: Day
-  , endTime :: Day
+  , startTime :: UTCTime
+  , endTime :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Topic
 instance FromJSON Topic
@@ -22,28 +22,28 @@ data Vote = Vote
   { voterID :: Integer
   , choiceID :: Integer
   , amount :: Integer
-  , mostRecent :: Day
-  , comment :: Maybe Day
+  , mostRecent :: UTCTime
+  , comment :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Vote
 instance FromJSON Vote
 
-data UserVote = UserVote 
-  { userID :: Integer
+data AllocatedVote = AllocatedVote 
+  { memberID :: Integer
   , topicID :: Integer
   , votesAllocated :: Integer
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON UserVote
-instance FromJSON UserVote
+instance ToJSON AllocatedVote
+instance FromJSON AllocatedVote
 
-data User = User
+data Member = Member
   { id :: Integer
   , username :: String  
-  , dateJoined :: Day
+  , dateJoined :: UTCTime
   , email :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON User
-instance FromJSON User
+instance ToJSON Member
+instance FromJSON Member
 
 data Condition = Condition
   { todo :: String
@@ -52,11 +52,12 @@ instance ToJSON Condition
 instance FromJSON Condition
 
 data Choice = Choice
-  { name :: String
+  { id :: Integer
+  , name :: String
   , topicID :: Integer
   , description :: String
   , proposedBy :: Integer
-  , dateProposed :: Day
+  , dateProposed :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Choice
 instance FromJSON Choice
