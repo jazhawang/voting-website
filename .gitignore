@@ -4,7 +4,7 @@ voting-website.cabal
 *.o
 *~
 .DS_Store
-.env
+.env*
 report.html
 logfile
 db

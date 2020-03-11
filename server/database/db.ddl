@@ -1,8 +1,15 @@
 -- schema for the database
 
-DROP SCHEMA IF EXISTS voting CASCADE;
+/*DROP SCHEMA IF EXISTS voting CASCADE;
 CREATE SCHEMA voting;
-SET SEARCH_PATH to voting, public;
+SET SEARCH_PATH to voting, public; */
+
+DROP TABLE IF EXISTS AllocatedVote;
+DROP TABLE IF EXISTS Vote;
+DROP TABLE IF EXISTS Choice;
+DROP TABLE IF EXISTS Topic;
+DROP TABLE IF EXISTS Member;
+
 
 CREATE TABLE Member (
   id INT PRIMARY KEY,
@@ -10,6 +17,7 @@ CREATE TABLE Member (
   dateJoined timestamptz NOT NULL,
   email VARCHAR(255)
 );
+
 
 CREATE TABLE Topic (
   id SERIAL PRIMARY KEY, 
@@ -21,6 +29,7 @@ CREATE TABLE Topic (
   -- TODO : Add specific ending conditions?
 );
 
+
 CREATE TABLE Choice (
   id SERIAL PRIMARY KEY,
   name VARCHAR(128) NOT NULL,
@@ -29,7 +38,6 @@ CREATE TABLE Choice (
   proposedBy INT NOT NULL REFERENCES Member,
   dateProposed timestamptz NOT NULL
 );
-
 
 -- A vote (allocation) which has already happened
 CREATE TABLE Vote (
@@ -40,6 +48,7 @@ CREATE TABLE Vote (
   comment TEXT
 );
 
+
 CREATE TABLE AllocatedVote (
   memberID INT NOT NULL REFERENCES Member,
   topicID INT NOT NULL REFERENCES Topic,
@@ -48,9 +57,9 @@ CREATE TABLE AllocatedVote (
 );
 
 -- Data copied from CSV files.
-\COPY Member FROM 'member.csv' DELIMITER ',' CSV header;
-\COPY Topic FROM 'topic.csv' DELIMITER ',' CSV header;
-\COPY Choice FROM 'choice.csv' DELIMITER ',' CSV header;
-\COPY Vote FROM 'vote.csv' DELIMITER ',' CSV header;
-\COPY AllocatedVote FROM 'allocatedvote.csv' DELIMITER ',' CSV header;
+\COPY Member FROM 'mock/member.csv' DELIMITER ',' CSV header;
+\COPY Topic FROM 'mock/topic.csv' DELIMITER ',' CSV header;
+\COPY Choice FROM 'mock/choice.csv' DELIMITER ',' CSV header;
+\COPY Vote FROM 'mock/vote.csv' DELIMITER ',' CSV header;
+\COPY AllocatedVote FROM 'mock/allocatedvote.csv' DELIMITER ',' CSV header;
 

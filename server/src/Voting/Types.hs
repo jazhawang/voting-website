@@ -40,7 +40,7 @@ data Member = Member
   { id :: Integer
   , username :: String  
   , dateJoined :: UTCTime
-  , email :: String
+  , email :: Maybe String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Member
 instance FromJSON Member
