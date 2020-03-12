@@ -1,20 +1,47 @@
-
 {-# LANGUAGE OverloadedStrings #-}
 
-module Voting.Member (queryMember, queryMembers) where
+module Voting.Member 
+    ( queryMember
+    , queryMembers
+    , queryMemberVotes
+    , queryMemberAllocatedVotes
+    , queryMemberTopic
+    ) where
 
 import Voting.Types
+import Voting.Util
 import Database.PostgreSQL.Simple
 import EnvHandler
 import Servant
 import Control.Monad.IO.Class
 
 queryMembers :: Connection -> EnvHandler [Member]
-queryMembers conn = liftIO $ query_ conn "select * from Member"
+queryMembers = get "SELECT * FROM Member"
  
 queryMember :: Connection -> Integer -> EnvHandler Member
-queryMember conn id = do    
-    result <- liftIO (query conn "select * from Member where id=?" [id])
-    case result of 
-        [member] -> return member
-        _      -> throwError err404
+queryMember conn id = 
+    single =<< getByID "SELECT * FROM Member WHERE id=?" conn id
+
+queryMemberVotes :: Connection -> Integer -> EnvHandler [Vote]
+queryMemberVotes = getByID "SELECT * FROM Vote WHERE voterID=?" 
+
+queryMemberAllocatedVotes :: Connection -> Integer -> EnvHandler [AllocatedVote]
+queryMemberAllocatedVotes = 
+    getByID "SELECT * FROM AllocatedVote WHERE memberID=?" 
+
+-- find the allocated votes and previous votes of a member for a given topic
+-- will throw a 404 if the user has not been allocated any votes previously
+queryMemberTopic :: Connection -> 
+    Integer -> Integer -> EnvHandler (AllocatedVote, [Vote])
+queryMemberTopic conn memberID topicID = do
+    allocatedResult <- getByParams allocStr conn [memberID, topicID]
+    allocatedSingle <- single allocatedResult
+    voteResult      <- getByParams voteStr conn [memberID, topicID]
+    return (allocatedSingle, voteResult)
+  where 
+    allocStr = "SELECT * FROM AllocatedVote WHERE memberID=? AND topicID=? "
+    voteStr = "SELECT Vote.* FROM Vote "
+              <> "JOIN Choice ON (Vote.choiceID=Choice.id) "
+              <> "WHERE Vote.voterID=? AND Choice.topicID=? "
+    
+    

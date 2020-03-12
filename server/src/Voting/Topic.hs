@@ -27,8 +27,8 @@ queryTopicFull conn id = do
 
 queryTopicVotes :: Connection -> Integer -> EnvHandler [Vote]
 queryTopicVotes conn id = do    
-    let queryString = "SELECT Vote.* FROM Vote" 
-                      <> "JOIN Choice ON (Vote.choiceID=Choice.id)"
+    let queryString = "SELECT Vote.* FROM Vote " 
+                      <> "JOIN Choice ON (Vote.choiceID=Choice.id) "
                       <> "WHERE Choice.topicID=?"
     liftIO (query conn queryString [id])
 

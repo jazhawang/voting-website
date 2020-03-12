@@ -13,24 +13,10 @@ import Data.Pool
 import EnvHandler
 import AppEnv
 
-
 type RootEndpoint = Get '[JSON] String
-
 type APIEndpoints = "api" :> "v1" :> APIEndpointsMembers
-
-type APIEndpointsMembers = 
-       ("members" :> Get '[JSON] [Member]) -- get all Members
-  :<|> ("member" :> Capture "id" Integer :> Get '[JSON] Member)
-
 type API = RootEndpoint :<|> APIEndpoints
 
-apiMemberServer = 
-  (do cp <- asks db
-      withResource cp queryMembers)
-  :<|> (\id -> do 
-    cp <- asks db
-    withResource cp (\con -> queryMember con id))
-    
 appServer :: ServerT API EnvHandler
 appServer = rootServer :<|> apiServer
 
@@ -48,3 +34,18 @@ app env = serve appAPI $ hoistServer appAPI (envHandlerToHandler env) appServer
 -- simple logging helper function
 logServer :: String -> EnvHandler ()
 logServer = liftIO . putStrLn 
+
+type APIEndpointsMembers = 
+       ("members"                                       :> Get '[JSON] [Member])
+  :<|> ("member" :> Capture "id" Integer                :> Get '[JSON] Member)
+  :<|> ("member" :> Capture "id" Integer :> "votes"     :> Get '[JSON] [Vote])
+  :<|> ("member" :> Capture "id" Integer :> "allocated" :> Get '[JSON] [AllocatedVote])
+  :<|> ("member" :> Capture "id" Integer :> "topic" :> Capture "id" Integer 
+          :> Get '[JSON] (AllocatedVote, [Vote]))
+
+apiMemberServer = 
+       (asks db >>= \x -> withResource x queryMembers)
+  :<|> (\id -> asks db >>= \x -> withResource x (\con -> queryMember con id))
+  :<|> (\id -> asks db >>= \x -> withResource x (\con -> queryMemberVotes con id))  
+  :<|> (\id -> asks db >>= \x -> withResource x (\con -> queryMemberAllocatedVotes con id)) 
+  :<|> (\mid tid -> asks db >>= \x -> withResource x (\con -> queryMemberTopic con mid tid)) 

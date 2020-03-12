@@ -5,7 +5,8 @@ GET:
 /api/v1/...
     members : List all members in the database (could be a lot)
     member/{id} : Return member with given id. Return 404 if not found
-    member/votes : Return all of the votes of a member
+    member/{id}/votes : Return all of the votes of a member
+    member/{id}/allocated/ : Return all allocated votes of a member
     member/{id}/topic/{topicID}: Return allocated votes and votes for all choices of a given topic
     
     topics: Get all topics (could be a lot)
