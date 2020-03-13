@@ -2,7 +2,10 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 
-module Voting.Types (Topic, Vote, AllocatedVote, Member, Condition, Choice) where
+module Voting.Types (
+  Topic, Vote, AllocatedVote, Member, Condition, Choice, MemberAllocated
+  ) where
+
 import Data.Aeson
 import Data.Time
 import GHC.Generics
@@ -11,7 +14,8 @@ import Database.PostgreSQL.Simple
 data Topic = Topic
   { id :: Integer
   , name :: String  
-  , description :: String
+  , description :: Maybe String
+  , proposedBy :: Integer
   , startTime :: UTCTime
   , endTime :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)
@@ -28,7 +32,7 @@ data Vote = Vote
 instance ToJSON Vote
 instance FromJSON Vote
 
-data AllocatedVote = AllocatedVote 
+data AllocatedVote = AllocatedVote
   { memberID :: Integer
   , topicID :: Integer
   , votesAllocated :: Integer
@@ -45,6 +49,16 @@ data Member = Member
 instance ToJSON Member
 instance FromJSON Member
 
+
+data MemberAllocated = MemberAllocated
+  { memberID :: Integer
+  , username :: String
+  , email :: String
+  , votesAllocated :: Integer
+  } deriving (Eq, Show, Generic, FromRow, ToRow)
+instance ToJSON MemberAllocated
+instance FromJSON MemberAllocated
+
 data Condition = Condition
   { todo :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
@@ -55,7 +69,7 @@ data Choice = Choice
   { id :: Integer
   , name :: String
   , topicID :: Integer
-  , description :: String
+  , description :: Maybe String
   , proposedBy :: Integer
   , dateProposed :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)

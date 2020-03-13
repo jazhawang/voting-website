@@ -19,8 +19,7 @@ queryMembers :: Connection -> EnvHandler [Member]
 queryMembers = get "SELECT * FROM Member"
  
 queryMember :: Connection -> Integer -> EnvHandler Member
-queryMember conn id = 
-    single =<< getByID "SELECT * FROM Member WHERE id=?" conn id
+queryMember = getSingleByID "SELECT * FROM Member WHERE id=?"
 
 queryMemberVotes :: Connection -> Integer -> EnvHandler [Vote]
 queryMemberVotes = getByID "SELECT * FROM Vote WHERE voterID=?" 
@@ -40,8 +39,8 @@ queryMemberTopic conn memberID topicID = do
     return (allocatedSingle, voteResult)
   where 
     allocStr = "SELECT * FROM AllocatedVote WHERE memberID=? AND topicID=? "
-    voteStr = "SELECT Vote.* FROM Vote "
-              <> "JOIN Choice ON (Vote.choiceID=Choice.id) "
-              <> "WHERE Vote.voterID=? AND Choice.topicID=? "
+    voteStr  = "SELECT Vote.* FROM Vote "
+               <> "JOIN Choice ON (Vote.choiceID=Choice.id) "
+               <> "WHERE Vote.voterID=? AND Choice.topicID=? "
     
     

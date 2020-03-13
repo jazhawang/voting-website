@@ -8,3 +8,4 @@ voting-website.cabal
 report.html
 logfile
 db
+.vscode

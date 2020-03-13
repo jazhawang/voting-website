@@ -9,10 +9,13 @@ GET:
     member/{id}/allocated/ : Return all allocated votes of a member
     member/{id}/topic/{topicID}: Return allocated votes and votes for all choices of a given topic
     
-    topics: Get all topics (could be a lot)
-    topic/{id} : Return a topic given its id. Return 404 if not found    
+    topics: Get all topics. (could be a lot). Does not give choices. See next query.
+    topic/{id} : Return a topic given its id, along with its choices and number of votes. Return 404 if not found.
     topic/{id}/members: Get all the members that have been invited to vote, and with AllocatedVotes
-    topic/{id}/choices: Get all the choices for a given vote
+    
+    choice/{id}: get a info about specific choice
+    choice/{id}/votes-num : get info about a choice and it's number of votes
+    choice/{id}/votes-full : get info about a choice and all its votes
 
 POST:
 /api/v1/...
