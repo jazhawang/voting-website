@@ -3,7 +3,8 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 
 module Voting.Types (
-  Topic, Vote, AllocatedVote, Member, Condition, Choice, MemberAllocated
+  Topic (..), Vote, AllocatedVote, Member, Condition, Choice, MemberAllocated,
+  MemberOnTopic (..), FullTopic (..)
   ) where
 
 import Data.Aeson
@@ -49,16 +50,6 @@ data Member = Member
 instance ToJSON Member
 instance FromJSON Member
 
-
-data MemberAllocated = MemberAllocated
-  { memberID :: Integer
-  , username :: String
-  , email :: String
-  , votesAllocated :: Integer
-  } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON MemberAllocated
-instance FromJSON MemberAllocated
-
 data Condition = Condition
   { todo :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
@@ -75,3 +66,32 @@ data Choice = Choice
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Choice
 instance FromJSON Choice
+
+
+data MemberAllocated = MemberAllocated
+  { memberID :: Integer
+  , username :: String
+  , email :: String
+  , votesAllocated :: Integer
+  } deriving (Eq, Show, Generic, FromRow, ToRow)
+instance ToJSON MemberAllocated
+instance FromJSON MemberAllocated
+
+data FullTopic = FullTopic
+  { id :: Integer
+  , name :: String  
+  , description :: Maybe String
+  , proposedBy :: Integer
+  , startTime :: UTCTime
+  , endTime :: UTCTime
+  , choices :: [Choice]
+  } deriving (Eq, Show, Generic)
+instance ToJSON FullTopic
+instance FromJSON FullTopic
+
+data MemberOnTopic = MemberOnTopic
+  { allocated :: AllocatedVote
+  , votes :: [Vote]
+  } deriving (Eq, Show, Generic)
+instance ToJSON MemberOnTopic
+instance FromJSON MemberOnTopic

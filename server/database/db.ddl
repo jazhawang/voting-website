@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS Member;
 
 
 CREATE TABLE Member (
-  id INT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   username VARCHAR(128) NOT NULL,
   dateJoined timestamptz NOT NULL,
   email VARCHAR(255)

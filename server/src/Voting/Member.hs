@@ -31,12 +31,12 @@ queryMemberAllocatedVotes =
 -- find the allocated votes and previous votes of a member for a given topic
 -- will throw a 404 if the user has not been allocated any votes previously
 queryMemberTopic :: Connection -> 
-    Integer -> Integer -> EnvHandler (AllocatedVote, [Vote])
+    Integer -> Integer -> EnvHandler MemberOnTopic
 queryMemberTopic conn memberID topicID = do
     allocatedResult <- getByParams allocStr conn [memberID, topicID]
     allocatedSingle <- single allocatedResult
     voteResult      <- getByParams voteStr conn [memberID, topicID]
-    return (allocatedSingle, voteResult)
+    return (MemberOnTopic allocatedSingle voteResult)
   where 
     allocStr = "SELECT * FROM AllocatedVote WHERE memberID=? AND topicID=? "
     voteStr  = "SELECT Vote.* FROM Vote "

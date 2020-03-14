@@ -42,7 +42,7 @@ type APIEndpointsMembers =
   :<|> ("member" :> Capture "id" Integer :> "votes"     :> Get '[JSON] [Vote])
   :<|> ("member" :> Capture "id" Integer :> "allocated" :> Get '[JSON] [AllocatedVote])
   :<|> ("member" :> Capture "id" Integer :> "topic" :> Capture "id" Integer 
-          :> Get '[JSON] (AllocatedVote, [Vote]))
+          :> Get '[JSON] MemberOnTopic)
 
 apiMemberServer = 
        (asks db >>= \x -> withResource x queryMembers)
@@ -54,7 +54,7 @@ apiMemberServer =
 
 type APIEndpointsTopics =
   ("topics" :> Get '[JSON] [Topic])
-  :<|> ("topic" :> Capture "id" Integer :> Get '[JSON] (Topic, [Choice]))
+  :<|> ("topic" :> Capture "id" Integer :> Get '[JSON] FullTopic)
   :<|> ("topic" :> Capture "id" Integer :> "members" :> Get '[JSON] [MemberAllocated])
 
 apiTopicServer = 

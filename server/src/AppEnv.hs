@@ -10,5 +10,5 @@ import Data.Pool
 
 {- Holds server resources and information for our handlers to use -}
 newtype AppEnv = AppEnv {
-  db :: Pool Connection
+  db :: Pool Connection  
 } deriving (Generic)

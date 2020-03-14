@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-
+{-# LANGUAGE DuplicateRecordFields #-}
 module Voting.Topic 
   ( queryTopic
   , queryTopics
@@ -14,6 +14,7 @@ import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.ToRow
 import EnvHandler
 import Servant
+import Data.Time
 import Control.Monad.IO.Class
 
 
@@ -23,11 +24,23 @@ queryTopics = get "SELECT * FROM Topic"
 queryTopic :: Connection -> Integer -> EnvHandler Topic
 queryTopic = getSingleByID  "SELECT * FROM Topic WHERE id=?"
 
-queryTopicFull :: Connection -> Integer -> EnvHandler (Topic, [Choice])
+
+-- TODO : Figure out lens
+createFullTopic :: Topic -> [Choice] -> FullTopic
+createFullTopic t choices =
+  FullTopic ((Voting.Types.id :: Topic -> Integer) t)
+            ((name :: Topic -> String) t) 
+            ((description :: Topic -> Maybe String) t) 
+            ((proposedBy :: Topic -> Integer) t) 
+            ((startTime :: Topic -> UTCTime) t) 
+            ((endTime :: Topic -> UTCTime) t) 
+            choices
+
+queryTopicFull :: Connection -> Integer -> EnvHandler FullTopic
 queryTopicFull conn id = do
   topic   <- queryTopic conn id
   choices <- getByID "SELECT * FROM Choice where topicID=?" conn id
-  return (topic, choices)
+  return (createFullTopic topic choices)
 
 queryTopicVotes :: Connection -> Integer -> EnvHandler [Vote]
 queryTopicVotes = getByID queryString 
