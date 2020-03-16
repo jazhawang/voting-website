@@ -10,6 +10,7 @@ import Servant
 import Voting.Member
 import Voting.Topic
 import Voting.Types
+import Voting.Util
 import Data.Pool
 import EnvHandler
 import AppEnv
@@ -32,10 +33,6 @@ appAPI = Proxy
 app :: AppEnv -> Application
 app env = serve appAPI $ hoistServer appAPI (envHandlerToHandler env) appServer
 
--- simple logging helper function
-logServer :: String -> EnvHandler ()
-logServer = liftIO . putStrLn 
-
 type APIEndpointsMembers = 
        ("members"                                       :> Get '[JSON] [Member])
   :<|> ("member" :> Capture "id" Integer                :> Get '[JSON] Member)
@@ -56,9 +53,11 @@ type APIEndpointsTopics =
   ("topics" :> Get '[JSON] [Topic])
   :<|> ("topic" :> Capture "id" Integer :> Get '[JSON] FullTopic)
   :<|> ("topic" :> Capture "id" Integer :> "members" :> Get '[JSON] [MemberAllocated])
+  :<|> ("topic" :> ReqBody '[JSON] InTopic :> Post '[JSON] Topic)
 
 apiTopicServer = 
   (asks db >>= \x -> withResource x queryTopics)  
   :<|> (\id -> asks db >>= \x -> withResource x (\con -> queryTopicFull con id))
   :<|> (\id -> asks db >>= \x -> withResource x (\con -> queryTopicMembers con id))
+  :<|> (\topic -> asks db >>= \x -> withResource x (\con -> createTopic con topic))
   

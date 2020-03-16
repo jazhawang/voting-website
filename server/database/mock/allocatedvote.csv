@@ -1,6 +1,6 @@
-memberID,topicID,voteAllocated
-1,1,20
-2,1,20
-3,1,100
-4,1,10
-5,1,10
+memberID,topicID,votesAllocated
+1000,1000,20
+2000,1000,20
+3000,1000,100
+4000,1000,10
+5000,1000,10

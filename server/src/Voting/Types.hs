@@ -1,10 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE DataKinds #-}
 
 module Voting.Types (
   Topic (..), Vote, AllocatedVote, Member, Condition, Choice, MemberAllocated,
-  MemberOnTopic (..), FullTopic (..)
+  MemberOnTopic (..), FullTopic (..), InTopic (..)
   ) where
 
 import Data.Aeson
@@ -12,6 +13,20 @@ import Data.Time
 import GHC.Generics
 import Database.PostgreSQL.Simple
 
+-- TODO : 
+-- A lot of these types are some similar to another types, plus or minus
+-- so other fields. Find a way to instead describe these types through
+-- (homomorphic?) transformations from on to the other.
+data InTopic = InTopic
+  { name :: String  
+  , description :: Maybe String
+  , proposedBy :: Integer  
+  , endTime :: UTCTime
+  } deriving (Eq, Show, Generic, FromRow, ToRow)
+instance ToJSON InTopic
+instance FromJSON InTopic
+
+ 
 data Topic = Topic
   { id :: Integer
   , name :: String  
@@ -22,6 +37,7 @@ data Topic = Topic
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Topic
 instance FromJSON Topic
+
 
 data Vote = Vote
   { voterID :: Integer
