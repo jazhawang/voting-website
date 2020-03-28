@@ -13,6 +13,8 @@ import Voting.Util
 import Database.PostgreSQL.Simple
 import EnvHandler
 import Servant
+import Data.Time
+import Data.Time.Clock
 import Control.Monad.IO.Class
 
 queryMembers :: Connection -> EnvHandler [Member]
@@ -43,4 +45,24 @@ queryMemberTopic conn memberID topicID = do
                <> "JOIN Choice ON (Vote.choiceID=Choice.id) "
                <> "WHERE Vote.voterID=? AND Choice.topicID=? "
     
-    
+createMember :: Connection -> InMember -> EnvHandler (Only Integer)
+createMember conn memb = do
+    _ <- checkUsernameDNE conn memb
+    dateJoined <- liftIO getCurrentTime
+    let params = ( (username :: InMember -> String) memb
+                 , dateJoined
+                 , (email :: InMember -> Maybe String) memb
+                 )
+    single =<< liftIO (query conn qString params)
+  where 
+    qString = "INSERT INTO Member " 
+              <> "(name, dateJoined, email) " 
+              <> "VALUES (?,?,?) RETURNING *"
+
+checkUsernameDNE :: Connection -> InMember -> EnvHandler ()
+checkUsernameDNE conn member = do 
+    let memberUsername = (username :: InMember -> String) member
+    result <- liftIO (query conn "SELECT * FROM Member WHERE username=?);" [memberUsername])
+    case result :: [Member] of 
+        [] -> return ()
+        _ -> throwError err404

@@ -30,8 +30,6 @@ getByParams queryStr conn params = liftIO (query conn queryStr params)
 before :: UTCTime -> UTCTime -> Bool
 before start end = diffUTCTime end start > 0.0
 
-
-
 -- simple logging helper function
 logServer :: String -> EnvHandler ()
 logServer = liftIO . putStrLn 

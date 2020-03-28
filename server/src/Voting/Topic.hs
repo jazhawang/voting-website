@@ -63,9 +63,11 @@ queryTopicMembers = getByID queryString
 
 createTopic :: Connection -> InTopic -> EnvHandler Topic
 createTopic conn topic = do
-  logServer "Processing POST"
-  _     <- checkName conn ((name :: InTopic -> String) topic)
-  start <- checkDate ((endTime :: InTopic -> UTCTime) topic)
+  logServer "Processing POST request"
+  -- make sure name isn't used by an active topic
+  _     <- checkName conn topic
+  -- make sure ending date has not happened yet
+  start <- checkDate topic
   let params = ( (name :: InTopic -> String) topic
                , (description :: InTopic -> Maybe String) topic
                , (proposedBy :: InTopic -> Integer) topic
@@ -77,21 +79,23 @@ createTopic conn topic = do
     qString = "INSERT INTO Topic " 
               <> "(name, description, proposedBy, startTime, endTime) " 
               <> "VALUES (?,?,?,?,?) RETURNING *"
-    
+
   
 -- check that the given end time is before the current time, return startTime
-checkDate :: UTCTime -> EnvHandler UTCTime
-checkDate end = do
+checkDate :: InTopic -> EnvHandler UTCTime
+checkDate topic = do
+  let end = (endTime :: InTopic -> UTCTime) topic
   start <- liftIO getCurrentTime  
   if start `before` end then
     return start
   else throwError err404
 
 -- check that the given topic name isnt already in user by an active topic
-checkName :: Connection -> String -> EnvHandler ()
-checkName conn name = do
+checkName :: Connection -> InTopic -> EnvHandler ()
+checkName conn topic = do
+  let topicName = (name :: InTopic -> String) topic
   current <- liftIO getCurrentTime
-  endTimes <- liftIO $ sameNameTopicEndTimes conn name
+  endTimes <- liftIO $ sameNameTopicEndTimes conn topicName
   if any (before current) endTimes then
     throwError err404
   else return ()
@@ -100,7 +104,6 @@ sameNameTopicEndTimes :: Connection -> String -> IO [UTCTime]
 sameNameTopicEndTimes conn name = do 
   result <- query conn "SELECT endTime FROM Topic WHERE name=?" [name]
   return (fromOnly <$> result)
-
 
 
 updateTopic :: Connection -> Integer -> Topic -> EnvHandler ()

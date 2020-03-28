@@ -1,17 +1,17 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE DataKinds #-}
 
 module Voting.Types (
   Topic (..), Vote, AllocatedVote, Member, Condition, Choice, MemberAllocated,
-  MemberOnTopic (..), FullTopic (..), InTopic (..)
+  MemberOnTopic (..), FullTopic (..), InTopic (..), InMember (..)
   ) where
 
 import Data.Aeson
 import Data.Time
 import GHC.Generics
 import Database.PostgreSQL.Simple
+
 
 -- TODO : 
 -- A lot of these types are some similar to another types, plus or minus
@@ -65,6 +65,13 @@ data Member = Member
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 instance ToJSON Member
 instance FromJSON Member
+
+data InMember = InMember 
+  { username :: String
+  , email :: Maybe String
+  } deriving (Eq, Show, Generic, FromRow, ToRow)
+instance ToJSON InMember
+instance FromJSON InMember
 
 data Condition = Condition
   { todo :: String
