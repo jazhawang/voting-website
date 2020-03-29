@@ -16,6 +16,7 @@ import Servant
 import Data.Time
 import Data.Time.Clock
 import Control.Monad.IO.Class
+import Control.Lens hiding (Choice)
 
 queryMembers :: Connection -> EnvHandler [Member]
 queryMembers = get "SELECT * FROM Member"
@@ -49,9 +50,9 @@ createMember :: Connection -> InMember -> EnvHandler (Only Integer)
 createMember conn memb = do
     _ <- checkUsernameDNE conn memb
     dateJoined <- liftIO getCurrentTime
-    let params = ( (username :: InMember -> String) memb
+    let params = ( memb^.username
                  , dateJoined
-                 , (email :: InMember -> Maybe String) memb
+                 , memb^.email
                  )
     single =<< liftIO (query conn qString params)
   where 
@@ -61,7 +62,7 @@ createMember conn memb = do
 
 checkUsernameDNE :: Connection -> InMember -> EnvHandler ()
 checkUsernameDNE conn member = do 
-    let memberUsername = (username :: InMember -> String) member
+    let memberUsername = member^.username
     result <- liftIO (query conn "SELECT * FROM Member WHERE username=?);" [memberUsername])
     case result :: [Member] of 
         [] -> return ()

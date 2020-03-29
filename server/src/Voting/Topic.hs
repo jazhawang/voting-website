@@ -12,6 +12,7 @@ module Voting.Topic
   , createTopic
   ) where
 
+import Prelude hiding (id)
 import Voting.Types
 import Voting.Util
 import Database.PostgreSQL.Simple
@@ -22,6 +23,7 @@ import Servant
 import Data.Time
 import Data.Time.Clock
 import Control.Monad.IO.Class
+import Control.Lens hiding (Choice)
 
 queryTopics :: Connection -> EnvHandler [Topic]
 queryTopics = get "SELECT * FROM Topic"
@@ -29,16 +31,14 @@ queryTopics = get "SELECT * FROM Topic"
 queryTopic :: Connection -> Integer -> EnvHandler Topic
 queryTopic = getSingleByID  "SELECT * FROM Topic WHERE id=?"
 
-
--- TODO : Figure out lens
 createFullTopic :: Topic -> [Choice] -> FullTopic
 createFullTopic t choices =
-  FullTopic ((Voting.Types.id :: Topic -> Integer) t)
-            ((name :: Topic -> String) t) 
-            ((description :: Topic -> Maybe String) t) 
-            ((proposedBy :: Topic -> Integer) t) 
-            ((startTime :: Topic -> UTCTime) t) 
-            ((endTime :: Topic -> UTCTime) t) 
+  FullTopic (t^.id)
+            (t^.name)
+            (t^.description)
+            (t^.proposedBy)
+            (t^.startTime)
+            (t^.endTime)
             choices
 
 queryTopicFull :: Connection -> Integer -> EnvHandler FullTopic
@@ -68,11 +68,11 @@ createTopic conn topic = do
   _     <- checkName conn topic
   -- make sure ending date has not happened yet
   start <- checkDate topic
-  let params = ( (name :: InTopic -> String) topic
-               , (description :: InTopic -> Maybe String) topic
-               , (proposedBy :: InTopic -> Integer) topic
+  let params = ( topic^.name
+               , topic^.description
+               , topic^.proposedBy
                , start
-               , (endTime :: InTopic -> UTCTime) topic
+               , topic^.endTime
                )
   single =<< liftIO (query conn qString params)
   where 
@@ -84,7 +84,7 @@ createTopic conn topic = do
 -- check that the given end time is before the current time, return startTime
 checkDate :: InTopic -> EnvHandler UTCTime
 checkDate topic = do
-  let end = (endTime :: InTopic -> UTCTime) topic
+  let end = topic^.endTime
   start <- liftIO getCurrentTime  
   if start `before` end then
     return start
@@ -93,7 +93,7 @@ checkDate topic = do
 -- check that the given topic name isnt already in user by an active topic
 checkName :: Connection -> InTopic -> EnvHandler ()
 checkName conn topic = do
-  let topicName = (name :: InTopic -> String) topic
+  let topicName = topic^.name
   current <- liftIO getCurrentTime
   endTimes <- liftIO $ sameNameTopicEndTimes conn topicName
   if any (before current) endTimes then
