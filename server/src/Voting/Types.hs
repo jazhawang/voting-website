@@ -4,13 +4,18 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Voting.Types where
 
 import Data.Aeson
+import Data.Aeson.Lens
+import Data.Aeson.Types
+import Data.Aeson.TH
 import Data.Time
 import GHC.Generics
 import Database.PostgreSQL.Simple
+import qualified Data.Text as T
 import Control.Lens hiding (Choice)
 
 
@@ -20,8 +25,12 @@ data InTopic = InTopic
   , _inTopicProposedBy :: Integer  
   , _inTopicEndTime :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON InTopic
-instance FromJSON InTopic
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_inTopic")
+        } ''InTopic)
+
 makeFields ''InTopic
 
 data Topic = Topic
@@ -32,9 +41,13 @@ data Topic = Topic
   , _topicStartTime :: UTCTime
   , _topicEndTime :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON Topic
-instance FromJSON Topic
-makeFields ''Topic
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_topic")
+        } ''Topic)
+
+$(makeFields ''Topic)
 
 data Vote = Vote
   { _voteVoterID :: Integer
@@ -43,18 +56,26 @@ data Vote = Vote
   , _voteMostRecent :: UTCTime
   , _voteComment :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON Vote
-instance FromJSON Vote
-makeFields ''Vote
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_vote")
+        } ''Vote)
+
+$(makeFields ''Vote)
 
 data AllocatedVote = AllocatedVote
   { _allocatedVoteMemberID :: Integer
   , _allocatedVoteTopicID :: Integer
   , _allocatedVoteVotesAllocated :: Integer
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON AllocatedVote
-instance FromJSON AllocatedVote
-makeFields ''AllocatedVote
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_allocatedVote")
+        } ''AllocatedVote)
+
+$(makeFields ''AllocatedVote)
 
 data Member = Member
   { _memberId :: Integer
@@ -62,25 +83,37 @@ data Member = Member
   , _memberDateJoined :: UTCTime
   , _memberEmail :: Maybe String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON Member
-instance FromJSON Member
-makeFields ''Member
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_member")
+        } ''Member)
+
+$(makeFields ''Member)
 
 data InMember = InMember 
   { _inMemberUsername :: String
   , _inMemberEmail :: Maybe String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON InMember
-instance FromJSON InMember
-makeFields ''InMember
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_inMember")
+        } ''InMember)
+
+$(makeFields ''InMember)
 
 
 data Condition = Condition
   { _conditionTodo :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON Condition
-instance FromJSON Condition
-makeFields ''Condition
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_Condition")
+        } ''Condition)
+
+$(makeFields ''Condition)
 
 
 data Choice = Choice
@@ -91,9 +124,13 @@ data Choice = Choice
   , _choiceProposedBy :: Integer
   , _choiceDateProposed :: UTCTime
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON Choice
-instance FromJSON Choice
-makeFields ''Choice
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_choice")
+        } ''Choice)
+
+$(makeFields ''Choice)
 
 data MemberAllocated = MemberAllocated
   { _memberAllocatedMemberID :: Integer
@@ -101,9 +138,14 @@ data MemberAllocated = MemberAllocated
   , _memberAllocatedEmail :: String
   , _memberAllocatedVotesAllocated :: Integer
   } deriving (Eq, Show, Generic, FromRow, ToRow)
-instance ToJSON MemberAllocated
-instance FromJSON MemberAllocated
-makeFields ''MemberAllocated
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_memberAllocated")
+        } ''MemberAllocated)
+
+$(makeFields ''MemberAllocated)
+
 
 data FullTopic = FullTopic
   { _fullTopicId :: Integer
@@ -114,14 +156,23 @@ data FullTopic = FullTopic
   , _fullTopicEndTime :: UTCTime
   , _fullTopicChoices :: [Choice]
   } deriving (Eq, Show, Generic)
-instance ToJSON FullTopic
-instance FromJSON FullTopic
-makeFields ''FullTopic
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_fullTopic")
+        } ''FullTopic)
+
+$(makeFields ''FullTopic)
+
 
 data MemberOnTopic = MemberOnTopic
   { _memberOnTopicAllocated :: AllocatedVote
   , _memberOnTopicAllocatedVotes :: [Vote]
   } deriving (Eq, Show, Generic)
-instance ToJSON MemberOnTopic
-instance FromJSON MemberOnTopic
-makeFields ''MemberOnTopic
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_memberOnTopic")
+        } ''MemberOnTopic)
+
+$(makeFields ''MemberOnTopic)

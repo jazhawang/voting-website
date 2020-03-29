@@ -34,7 +34,9 @@ dependencies:
 - users
 - dotenv
 - envy
+- text
 - lens
+- lens-aeson
 
 library:
   source-dirs: src
