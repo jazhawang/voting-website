@@ -109,14 +109,14 @@ sameNameTopicEndTimes conn name = do
   return (fromOnly <$> result)
 
 
-addChoice :: Connection -> Integer -> InChoice -> EnvHandler Choice
-addChoice conn topicID choice = return ()
+--addChoice :: Connection -> Integer -> InChoice -> EnvHandler Choice
+--addChoice conn topicID choice = return ()
   -- check for uniqueness of the choice name for the topic
   -- add the choice name if so
 
 -- allocates user votes on choices
 allocateVotes :: Connection -> Integer -> [(Integer, Integer, String)] -> EnvHandler ()
-
+allocateVotes conn memberId choices = return ()
 
 -- ^ superior
 voteFor :: Connection -> Integer -> Integer -> Integer -> Maybe String -> EnvHandler ()
@@ -126,3 +126,4 @@ voteFor conn memberID choiceID amount comment = return ()
   -- if has added, then update it, if not, then create it
 
 revokeVote :: Connection -> Integer
+revokeVote conn = -1

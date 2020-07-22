@@ -57,6 +57,8 @@ data Vote = Vote
   , _voteComment :: String
   } deriving (Eq, Show, Generic, FromRow, ToRow)
 
+type MemberVotes = [Vote]
+
 $(deriveJSON
     defaultOptions
         { fieldLabelModifier = camelTo2 '_' . drop (T.length "_vote")
