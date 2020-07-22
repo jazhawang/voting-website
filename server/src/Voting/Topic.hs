@@ -60,7 +60,10 @@ queryTopicMembers = getByID queryString
                       <> "JOIN AllocatedVote ON (Member.id=AllocatedVote.memberID) "
                       <> "WHERE AllocatedVote.topicID=?"
 
-
+-- TODO: i've decided that the poll creator will not be able to change allocated 
+--- votes and members of the poll after creation. So this function is useless. 
+-- Change it so it takes in members/emails and their allocations. 
+-- Maybe also add an optional choices.
 createTopic :: Connection -> InTopic -> EnvHandler Topic
 createTopic conn topic = do
   logServer "Processing POST request"
@@ -106,8 +109,20 @@ sameNameTopicEndTimes conn name = do
   return (fromOnly <$> result)
 
 
-updateTopic :: Connection -> Integer -> Topic -> EnvHandler ()
-updateTopic conn id topic = throwError err404
+addChoice :: Connection -> Integer -> InChoice -> EnvHandler Choice
+addChoice conn topicID choice = return ()
+  -- check for uniqueness of the choice name for the topic
+  -- add the choice name if so
 
-deleteTopic :: Connection -> Integer -> EnvHandler ()
-deleteTopic conn id = throwError err404
+-- allocates user votes on choices
+allocateVotes :: Connection -> Integer -> [(Integer, Integer, String)] -> EnvHandler ()
+
+
+-- ^ superior
+voteFor :: Connection -> Integer -> Integer -> Integer -> Maybe String -> EnvHandler ()
+voteFor conn memberID choiceID amount comment = return ()
+  -- check to see if user has enough allocated votes
+  -- check to see if the user has already added votes to such a topic
+  -- if has added, then update it, if not, then create it
+
+revokeVote :: Connection -> Integer

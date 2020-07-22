@@ -31,7 +31,7 @@ $(deriveJSON
         { fieldLabelModifier = camelTo2 '_' . drop (T.length "_inTopic")
         } ''InTopic)
 
-makeFields ''InTopic
+$(makeFields ''InTopic)
 
 data Topic = Topic
   { _topicId :: Integer
@@ -116,6 +116,20 @@ $(deriveJSON
 $(makeFields ''Condition)
 
 
+data InChoice = InChoice
+  { _inChoiceName :: String
+  , _inChoiceTopicID :: Integer
+  , _inChoiceDescription :: Maybe String
+  , _inChoiceProposedBy :: Integer  
+  } deriving (Eq, Show, Generic, FromRow, ToRow)
+
+$(deriveJSON
+    defaultOptions
+        { fieldLabelModifier = camelTo2 '_' . drop (T.length "_inChoice")
+        } ''InChoice)
+
+$(makeFields ''InChoice)
+
 data Choice = Choice
   { _choiceId :: Integer
   , _choiceName :: String
@@ -132,6 +146,8 @@ $(deriveJSON
 
 $(makeFields ''Choice)
 
+
+-- used to output data for an endpoint
 data MemberAllocated = MemberAllocated
   { _memberAllocatedMemberID :: Integer
   , _memberAllocatedUsername :: String
