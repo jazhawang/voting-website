@@ -17,6 +17,8 @@ type Weight = Double
 type ChoiceId = Integer
 type UserId = Integer
 
+type UserVotes = [Vote]
+
 getTotalVotes :: [Vote] -> Integer
 getTotalVotes votes = sum (map _voteAmount votes)
 
@@ -27,12 +29,13 @@ groupByMemberAndTopic :: UserVotes -> [(ChoiceId, Weight)]
 groupByMemberAndTopic _ = [] -- TODO
 
 sortQuadratic :: [UserVotes] -> [(ChoiceId, Weight)]
+sortQuadratic _ = [] -- TODO
 --sortQuadratic userVotes = 
 --    groupOn fst (concat (map groupByMemberAndTopic userVotes))
 
 
 groupTuple :: Eq a => [(a,b)] -> [(a, [b])]
-groupTuple tups = groupSort tups -- not the most efficient
+groupTuple tups = [] -- TODO
 
 getWinner :: [UserVotes] -> ChoiceId
-getWinner votes = (sortQuadratic votes) !! 0
+getWinner votes = fst ((sortQuadratic votes) !! 0)
